@@ -1,7 +1,11 @@
 require 'appscript'
 class I2Cssh
     def initialize servers, ssh_options, i2_options, ssh_environment
-        @ssh_prefix         = "ssh " + ssh_options.join(' ')
+        if i2_options.first[:passthrough]
+            @ssh_prefix     = "ssh #{ssh_options.join ' '} -t #{i2_options.first[:passthrough]} ssh #{ssh_options.join ' '} -t "
+        else
+            @ssh_prefix         = "ssh " + ssh_options.join(' ')
+        end
         @ssh_options        = ssh_options
         @i2_options         = i2_options.clone
         @servers            = servers
